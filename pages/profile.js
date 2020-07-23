@@ -11,41 +11,44 @@
 // import Divider from "@material-ui/core/Divider";
 // import Edit from "@material-ui/icons/Edit";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { authInitialProps } from "../lib/auth";
 
 class Profile extends React.Component {
-  state = {};
+    state = {};
 
-  render() {
-    return <div>Profile</div>;
-  }
+    render() {
+        return <div>Profile</div>;
+    }
 }
 
-const styles = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 5,
-    margin: "auto",
-    [theme.breakpoints.up("sm")]: {
-      width: 600
-    }
-  },
-  title: {
-    color: theme.palette.primary.main
-  },
-  progress: {
-    margin: theme.spacing.unit * 2
-  },
-  progressContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column"
-  },
-  bigAvatar: {
-    width: 60,
-    height: 60,
-    margin: 10
-  }
+const styles = (theme) => ({
+    root: {
+        padding: theme.spacing.unit * 3,
+        marginTop: theme.spacing.unit * 5,
+        margin: "auto",
+        [theme.breakpoints.up("sm")]: {
+            width: 600,
+        },
+    },
+    title: {
+        color: theme.palette.primary.main,
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
+    progressContainer: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+    },
+    bigAvatar: {
+        width: 60,
+        height: 60,
+        margin: 10,
+    },
 });
+
+Profile.getInitialProps = authInitialProps(true);
 
 export default withStyles(styles)(Profile);
