@@ -6,27 +6,25 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Delete from "@material-ui/icons/Delete";
+import Router from "next/router";
 import { signoutUser } from "../../lib/auth";
 import { deleteUser } from "../../lib/api";
 
 class DeleteUser extends React.Component {
     state = {
         open: false,
-        isDeleting: false,
     };
 
     handleDeleteUser = () => {
         const { user } = this.props;
 
-        this.setState({ isDeleting: true });
-
         deleteUser(user._id)
             .then(() => {
                 signoutUser();
+                Router.push("/signup");
             })
             .catch((err) => {
                 console.error(err);
-                this.setState({ isDeleting: false });
             });
     };
 
@@ -35,7 +33,7 @@ class DeleteUser extends React.Component {
     handleClose = () => this.setState({ open: false });
 
     render() {
-        const { open, isDeleting } = this.state;
+        const { open } = this.state;
         return (
             <div>
                 {/* Delete Button */}
@@ -45,24 +43,7 @@ class DeleteUser extends React.Component {
 
                 {/* Delete User Dialog */}
                 <Dialog open={open} onClose={this.handleClose}>
-                    <DialogTitle>Delete Account</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Confirm to delete your account
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={this.handleDeleteUser}
-                            color="secondary"
-                            disabled={isDeleting}
-                        >
-                            {isDeleting ? "Deleting..." : "Confirm"}
-                        </Button>
-                    </DialogActions>
+                    <DialogTitle></DialogTitle>
                 </Dialog>
             </div>
         );
