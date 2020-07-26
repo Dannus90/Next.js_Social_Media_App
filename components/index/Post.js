@@ -14,6 +14,8 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Link from "next/link";
 
+import Comments from "./Comments";
+
 class Post extends React.PureComponent {
     state = {
         isLiked: false,
@@ -25,6 +27,7 @@ class Post extends React.PureComponent {
         this.setState({
             isLiked: this.checkLiked(this.props.post.likes),
             numLikes: this.props.post.likes.length,
+            comments: this.props.post.comments,
         });
     }
 
@@ -33,6 +36,14 @@ class Post extends React.PureComponent {
             this.setState({
                 isLiked: this.checkLiked(this.props.post.likes),
                 numLikes: this.props.post.likes.length,
+            });
+        }
+
+        if (
+            prevProps.post.comments.length !== this.props.post.comments.length
+        ) {
+            this.setState({
+                comments: this.props.post.comments,
             });
         }
     }
@@ -47,12 +58,13 @@ class Post extends React.PureComponent {
             isDeletingPost,
             handleDeletePost,
             handleToggleLike,
+            handleAddComment,
         } = this.props;
 
         const { isLiked, numLikes, comments } = this.state;
         const isPostCreator = post.postedBy._id === auth.user._id;
         return (
-            <Card clasName={classes.card}>
+            <Card className={classes.card}>
                 {/* Post Header */}
                 <CardHeader
                     avatar={<Avatar src={post.postedBy.avatar} />}
@@ -111,6 +123,12 @@ class Post extends React.PureComponent {
                 <Divider />
 
                 {/* Comments Area */}
+                <Comments
+                    auth={auth}
+                    postId={post._id}
+                    comments={comments}
+                    handleAddComment={handleAddComment}
+                />
             </Card>
         );
     }

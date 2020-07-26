@@ -109,7 +109,7 @@ exports.toggleComment = async (req, res) => {
         data = { _id: comment._id };
     } else {
         operator = "$push";
-        data = { text: comment.text, postedBy: req.user_id };
+        data = { text: comment.text, postedBy: req.user._id };
     }
 
     const updatedPost = await Post.findOneAndUpdate(
