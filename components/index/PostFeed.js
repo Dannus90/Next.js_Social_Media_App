@@ -2,13 +2,21 @@ import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import NewPost from "./NewPost";
 import Post from "./Post";
-import { addPost, getPostFeed } from "../../lib/api";
+import {
+    addPost,
+    getPostFeed,
+    deletePost,
+    unlikePost,
+    likePost,
+} from "../../lib/api";
+
 class PostFeed extends React.Component {
     state = {
         posts: [],
         text: "",
         image: "",
         isAddingPost: false,
+        isDeletingPost: false,
     };
 
     componentDidMount() {
@@ -58,9 +66,51 @@ class PostFeed extends React.Component {
             });
     };
 
+    handleDeletePost = (deletedPost) => {
+        this.setState({ isDeletingPost: true });
+        deletePost(deletedPost._id)
+            .then((postData) => {
+                const postIndex = this.state.posts.findIndex(
+                    (post) => post._id === postData._id
+                );
+                const updatedPost = [
+                    ...this.state.posts.slice(0, postIndex),
+                    ...this.state.posts.slice(postIndex + 1),
+                ];
+                this.setState({
+                    posts: updatedPost,
+                    isDeletingPost: false,
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                this.setState({ idDeletingPost: false });
+            });
+    };
+
+    handleToggleLike = (post) => {
+        const { auth } = this.props;
+
+        const isPostLiked = post.likes.includes(auth.user._id);
+        const sendRequest = isPostLiked ? unlikePost : likePost;
+        sendRequest(post._id)
+            .then((postData) => {
+                const postIndex = this.state.posts.findIndex(
+                    (post) => post._id === postData._id
+                );
+                const updatedPosts = [
+                    ...this.state.posts.slice(0, postIndex),
+                    postData,
+                    ...this.state.posts.slice(postIndex + 1),
+                ];
+                this.setState({ posts: updatedPosts });
+            })
+            .catch((err) => console.error(err));
+    };
+
     render() {
         const { classes, auth } = this.props;
-        const { posts, text, image, isAddingPost } = this.state;
+        const { posts, text, image, isAddingPost, isDeletingPost } = this.state;
         console.log(posts);
         return (
             <div className={classes.root}>
@@ -82,7 +132,14 @@ class PostFeed extends React.Component {
                     handleAddPost={this.handleAddPost}
                 />
                 {posts.map((post) => (
-                    <Post key={post._id} auth={auth} post={post} />
+                    <Post
+                        key={post._id}
+                        auth={auth}
+                        post={post}
+                        isDeletingPost={isDeletingPost}
+                        handleDeletePost={this.handleDeletePost}
+                        handleToggleLike={this.handleToggleLike}
+                    />
                 ))}
             </div>
         );
