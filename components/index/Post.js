@@ -59,6 +59,7 @@ class Post extends React.PureComponent {
             handleDeletePost,
             handleToggleLike,
             handleAddComment,
+            handleDeleteComment,
         } = this.props;
 
         const { isLiked, numLikes, comments } = this.state;
@@ -128,6 +129,7 @@ class Post extends React.PureComponent {
                     postId={post._id}
                     comments={comments}
                     handleAddComment={handleAddComment}
+                    handleDeleteComment={handleDeleteComment}
                 />
             </Card>
         );
